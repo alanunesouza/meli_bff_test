@@ -7,6 +7,7 @@ import { AppService } from './app.service';
     HttpModule.register({
       timeout: 5000,
       maxRedirects: 5,
+      baseURL: 'https://api.mercadolibre.com',
     }),
   ],
   controllers: [AppController],

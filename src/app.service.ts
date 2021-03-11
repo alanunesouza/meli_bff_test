@@ -9,7 +9,7 @@ export class AppService {
   constructor(private httpService: HttpService) {}
 
   async getProducts(productName: { search: string }): Promise<Observable<any>> {
-    const url = `${process.env.ENDPOINT_MELI}/sites/MLA/search?q=${productName}&limit=${LIMIT_DEFAULT}`;
+    const url = `/sites/MLA/search?q=${productName}&limit=${LIMIT_DEFAULT}`;
     const products = await this.httpService
       .get(url)
       .pipe(map((resp) => resp.data))
@@ -19,8 +19,8 @@ export class AppService {
   }
 
   async getProductDetails(id: string): Promise<any> {
-    const urlProduct = `${process.env.ENDPOINT_MELI}/items/${id}`;
-    const urlProductDetails = `${process.env.ENDPOINT_MELI}/items/${id}/description`;
+    const urlProduct = `/items/${id}`;
+    const urlProductDetails = `/items/${id}/description`;
 
     const [product, description] = await Promise.all([
       this.httpService
