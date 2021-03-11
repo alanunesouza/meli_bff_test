@@ -1,23 +1,34 @@
-import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import {
   getProductDetailsInterceptor,
   getProductsInterceptor,
 } from './app.interceptor';
 import { AppService } from './app.service';
-
+import { ParamsDTO } from './dto/params.dto';
+import { QueryParamsDTO } from './dto/queryparams.dto';
 @Controller('api')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('items')
   @UseInterceptors(getProductsInterceptor)
-  getProducts(@Query('search') productName): any {
-    return this.appService.getProducts(productName);
+  @UsePipes(new ValidationPipe())
+  getProducts(@Query() reqQuery: QueryParamsDTO) {
+    return this.appService.getProducts(reqQuery.search);
   }
 
   @Get('items/:id')
   @UseInterceptors(getProductDetailsInterceptor)
-  getProductDetails(@Param() params): any {
-    return this.appService.getProductDetails(params.id);
+  @UsePipes(new ValidationPipe())
+  getProductDetails(@Param() reqParams: ParamsDTO): any {
+    return this.appService.getProductDetails(reqParams.id);
   }
 }

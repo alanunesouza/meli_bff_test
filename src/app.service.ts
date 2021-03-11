@@ -8,7 +8,7 @@ const LIMIT_DEFAULT = '4';
 export class AppService {
   constructor(private httpService: HttpService) {}
 
-  async getProducts(productName: { search: string }): Promise<Observable<any>> {
+  async getProducts(productName: string): Promise<Observable<any>> {
     const url = `/sites/MLA/search?q=${productName}&limit=${LIMIT_DEFAULT}`;
     const products = await this.httpService
       .get(url)
