@@ -1,6 +1,7 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ProductDetails, ProductList } from './types';
 
 const LIMIT_DEFAULT = '4';
 

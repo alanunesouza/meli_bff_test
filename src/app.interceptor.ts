@@ -1,11 +1,7 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ProductList, ProductDetails } from './types';
 
 export interface Response<T> {
   data: T;
@@ -13,14 +9,11 @@ export interface Response<T> {
 
 @Injectable()
 export class getProductsInterceptor<T>
-  implements NestInterceptor<T, Response<T>> {
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Observable<Response<T>> {
+  implements NestInterceptor<T, Response<ProductList>> {
+  intercept(_, next: CallHandler): Observable<Response<ProductList>> {
     return next.handle().pipe(
       map((data) => {
-        const dataWrapper = {
+        const dataWrapper: ProductList = {
           author: {
             name: 'Alan',
             lastname: 'Souza',
@@ -63,16 +56,13 @@ export class getProductsInterceptor<T>
 
 @Injectable()
 export class getProductDetailsInterceptor<T>
-  implements NestInterceptor<T, Response<T>> {
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Observable<Response<T>> {
+  implements NestInterceptor<T, Response<ProductDetails>> {
+  intercept(_, next: CallHandler): Observable<Response<ProductDetails>> {
     return next.handle().pipe(
       map((data) => {
         const { product, description } = data;
 
-        const dataWrapper = {
+        const dataWrapper: ProductDetails = {
           author: {
             name: 'Alan',
             lastname: 'Souza',
@@ -89,7 +79,6 @@ export class getProductDetailsInterceptor<T>
             condition:
               product.condition === 'new' ? 'Nuevo' : product.condition,
             free_shipping: product.shipping['free_shipping'],
-            state: product.seller_address.state.name,
             sold_quantity: product.sold_quantity,
             description: description.plain_text,
           },

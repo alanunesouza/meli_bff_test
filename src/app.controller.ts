@@ -7,6 +7,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { Observable } from 'rxjs';
 import {
   getProductDetailsInterceptor,
   getProductsInterceptor,
@@ -14,6 +15,7 @@ import {
 import { AppService } from './app.service';
 import { ParamsDTO } from './dto/params.dto';
 import { QueryParamsDTO } from './dto/queryparams.dto';
+import { ProductList } from './types';
 @Controller('api')
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -21,7 +23,9 @@ export class AppController {
   @Get('items')
   @UseInterceptors(getProductsInterceptor)
   @UsePipes(new ValidationPipe())
-  getProducts(@Query() reqQuery: QueryParamsDTO) {
+  getProducts(
+    @Query() reqQuery: QueryParamsDTO,
+  ): Promise<Observable<ProductList>> {
     return this.appService.getProducts(reqQuery.search);
   }
 
