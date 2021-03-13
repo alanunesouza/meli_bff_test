@@ -21,26 +21,30 @@ export class getProductsInterceptor<T>
           items: data.results
             ? data.results.map((item) => {
                 return {
-                  id: item.id,
-                  title: item.title,
+                  id: item?.id,
+                  title: item?.title,
                   price: {
                     currency:
-                      item.prices && item.prices.prices[0]
+                      item.prices && item.prices.prices && item.prices.prices[0]
                         ? item.prices.prices[0]['currency_id']
                         : null,
-                    amount: parseInt(item.price.toString().split('.')[0]),
-                    decimals: parseInt(item.price.toString().split('.')[1]),
+                    amount: item.price
+                      ? parseInt(item.price.toString().split('.')[0])
+                      : 0,
+                    decimals: item.price
+                      ? parseInt(item.price.toString().split('.')[1])
+                      : 0,
                   },
-                  picture: item.thumbnail.replace('-I', '-O'),
-                  condition: item.condition,
-                  free_shipping: item.shipping['free_shipping'],
-                  state: item.seller_address.state.name,
+                  picture: item?.thumbnail.replace('-I', '-O'),
+                  condition: item?.condition,
+                  free_shipping: item?.shipping['free_shipping'],
+                  state: item?.seller_address?.state?.name,
                 };
               })
             : [],
           categories:
-            data.filters && data.filters[0]
-              ? data.filters[0].values[0]['path_from_root'].map(
+            data.filters && data.filters[0] && data.filters[0].values[0]
+              ? data.filters[0].values[0]['path_from_root']?.map(
                   (category) => category.name,
                 )
               : [],
@@ -68,19 +72,23 @@ export class getProductDetailsInterceptor<T>
             lastname: 'Souza',
           },
           item: {
-            id: product.id,
-            title: product.title,
+            id: product?.id,
+            title: product?.title,
             price: {
-              currency: product.currency_id,
-              amount: parseInt(product.price.toString().split('.')[0]),
-              decimals: parseInt(product.price.toString().split('.')[1]),
+              currency: product?.currency_id,
+              amount: product.price
+                ? parseInt(product.price?.toString()?.split('.')[0])
+                : 0,
+              decimals: product.price
+                ? parseInt(product.price.toString().split('.')[1])
+                : 0,
             },
-            picture: product.thumbnail.replace('-I', '-O'),
+            picture: product?.thumbnail.replace('-I', '-O'),
             condition:
-              product.condition === 'new' ? 'Nuevo' : product.condition,
-            free_shipping: product.shipping['free_shipping'],
-            sold_quantity: product.sold_quantity,
-            description: description.plain_text,
+              product?.condition === 'new' ? 'Nuevo' : product.condition,
+            free_shipping: product?.shipping['free_shipping'],
+            sold_quantity: product?.sold_quantity,
+            description: description?.plain_text,
           },
         };
 
